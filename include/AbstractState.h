@@ -11,6 +11,7 @@ class AbstractState {
 
 public:
     AbstractState(Machine *context, const int _id);
+
     ~AbstractState();
 
     int getId() const;

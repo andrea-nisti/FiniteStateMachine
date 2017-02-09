@@ -5,27 +5,29 @@
 #ifndef STATEMACHINE_MACHINE_H
 #define STATEMACHINE_MACHINE_H
 
+#include <bits/unique_ptr.h>
 #include "AbstractState.h"
 
 class AbstractState;
+typedef std::unique_ptr<AbstractState> AbstractStatePtr;
+
+
 class Machine {
 
 
 public:
 
     Machine();
-    Machine(AbstractState* init);
+    Machine(AbstractStatePtr init);
     ~Machine();
 
-    AbstractState* getStatePtr();
     int getActualNodeId();
 
     void handle();
-    void setStatePtr(AbstractState *state) ;
+    void setStatePtr(AbstractStatePtr state) ;
 
+    AbstractStatePtr _state;
 
-private:
-    AbstractState* _state;
 };
 
 

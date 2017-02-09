@@ -6,24 +6,24 @@
 
 
 Machine::Machine() {}
-Machine::Machine(AbstractState *init) :_state(init){}
+Machine::Machine(AbstractStatePtr init) : _state(std::move(init)){}
 Machine::~Machine() {}
 
-void Machine::setStatePtr(AbstractState *state){
-    _state = state;
-}
+void Machine::setStatePtr(AbstractStatePtr state){
 
-AbstractState *Machine::getStatePtr() {
-    return _state;
+    _state = std::move( state );
 }
 
 void Machine::handle() {
 
     //Call state handler and set new state
+
     _state->handle();
 
 }
 
 int Machine::getActualNodeId() {
-    return getStatePtr()->getId();
+    return _state->getId();
 }
+
+
