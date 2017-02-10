@@ -20,6 +20,9 @@ public:
     //  Set here new context state                                          _context->setState = NewState)
     virtual void handle() = 0;
 
+    //Attach eternal signals.
+    virtual void init();
+
 protected:
     const int _id;
     Machine *_context;

@@ -3,6 +3,14 @@
 #include <iostream>
 #include "Machine.h"
 
+
+
+enum states{
+
+    OFF,
+    ON
+
+};
 class AbstractLightState : public AbstractState {
 
 protected:
@@ -26,6 +34,8 @@ public:
 
 };
 
+typedef std::unique_ptr<AbstractLightState> AbstractLightStatePtr;
+
 class LightOnState  : public AbstractLightState{
 
 public:
@@ -39,13 +49,15 @@ public:
 
             //Avoidable but for demonstration (we can manage multiple nextStates)
             //Stay in the same state if actual is ON and user pushes On button
-            _context->setStatePtr(this);
+
+
+            _context->setStatePtr(AbstractLightStatePtr(new LightOnState(_context,states::ON)));
 
         }else if (!*_lightSwitchOnPtr) {
 
             //Avoidable but for demonstration (we can manage multiple nextStates)
             //Stay in the same state if actual is ON and user pushes On button
-            _context->setStatePtr(this);
+            _context->setStatePtr(AbstractLightStatePtr(new LightOnState(_context,states::ON)));
 
         }
 
@@ -60,7 +72,7 @@ public:
         if (*_lightSwitchOffPtr){
 
             //Next state is OFF
-            _context->setStatePtr(_NextStateHolder);
+
             std::cout << "OFF" << std::endl;
 
         }
@@ -80,13 +92,13 @@ public:
 
             //Avoidable but for demonstration (we can manage multiple nextStates)
             //Stay in the same state if actual is ON and user pushes On button
-            _context->setStatePtr(this);
+            _context->setStatePtr(AbstractLightStatePtr(new LightOffState(_context,states::OFF)));
 
         }else if (!*_lightSwitchOffPtr) {
 
             //Avoidable but for demonstration (we can manage multiple nextStates)
             //Stay in the same state if actual is ON and user pushes On button
-            _context->setStatePtr(this);
+            _context->setStatePtr(AbstractLightStatePtr(new LightOffState(_context,states::OFF)));
 
         }
 
@@ -101,7 +113,7 @@ public:
         if (*_lightSwitchOnPtr){
 
             //Next state is OFF
-            _context->setStatePtr(_NextStateHolder);
+            _context->setStatePtr(AbstractLightStatePtr(new LightOnState(_context,states::ON)));
 
         }
 
@@ -128,13 +140,6 @@ int main() {
 
     std::cout << "Hello, this is an example for the superFantasticMachine library!" << std::endl;
 
-    enum states{
-
-        OFF,
-        ON
-
-    };
-
     //Create a Machine Object
 
     Machine context;
@@ -145,20 +150,20 @@ int main() {
     bool switchOff = true;
 
     //Create a bunch of nodes
-    LightOnState  on (contextPtr,states::ON);
-    LightOffState off(contextPtr,states::OFF);
-
-    //Initialize to off
-    context.setStatePtr(&off);
+    AbstractLightStatePtr on  = AbstractLightStatePtr(new LightOnState(contextPtr,states::ON)) ;
+    AbstractLightStatePtr off = AbstractLightStatePtr(new LightOffState(contextPtr,states::OFF)) ;
 
     //Initialize states
-    on.attachSwitches(&switchOn,&switchOff);
-    off.attachSwitches(&switchOn,&switchOff);
 
-    //Set Holders
-    on._NextStateHolder  = &off;
-    off._NextStateHolder = &on;
+    on->attachSwitches(&switchOn,&switchOff);
+    off->attachSwitches(&switchOn,&switchOff);
+
+    //Initialize to off
+    context.setStatePtr(dynamic_cast<AbstractStatePtr>(off*));
+
+
     std::cout << context.getActualNodeId() << std::endl;
+
     char in;
     bool done = false;
     do {
