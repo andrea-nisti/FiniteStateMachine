@@ -18,9 +18,10 @@ public:
     //Run state, define here switching condition for particular nodes (e.g. StateExample:AbstractState* NewState;
     //  Set here new context state                                          _context->setState = NewState)
     virtual void handle() = 0;
-    virtual void setId() = 0;
+
 
 protected:
+    virtual void setId() = 0;
     int _id;
     Machine *_context;
 
