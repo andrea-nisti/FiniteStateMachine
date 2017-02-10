@@ -4,7 +4,7 @@
 
 #include "AbstractState.h"
 
-AbstractState::AbstractState(Machine *context, const int _id) : _context(context), _id(_id) {}
+AbstractState::AbstractState(Machine *context) : _context(context) {}
 
 int AbstractState::getId() const {
     return _id;

@@ -10,7 +10,7 @@ class Machine;
 class AbstractState {
 
 public:
-    AbstractState(Machine *context, const int _id);
+    AbstractState(Machine *context);
     ~AbstractState();
 
     int getId() const;
@@ -18,9 +18,10 @@ public:
     //Run state, define here switching condition for particular nodes (e.g. StateExample:AbstractState* NewState;
     //  Set here new context state                                          _context->setState = NewState)
     virtual void handle() = 0;
+    virtual void setId() = 0;
 
 protected:
-    const int _id;
+    int _id;
     Machine *_context;
 
 };
