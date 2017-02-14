@@ -3,6 +3,13 @@
 #include <iostream>
 #include "Machine.h"
 
+
+enum states{
+
+    OFF,
+    ON
+
+};
 class AbstractLightState : public AbstractState {
 
 protected:
@@ -12,7 +19,7 @@ protected:
 
 public:
 
-    AbstractLightState(Machine *context, const int _id)  : AbstractState(context, _id) {}
+    AbstractLightState(Machine *context)  : AbstractState(context) {}
 
     //Trick to pass next state in the case we use static memory, you will see..
     AbstractLightState* _NextStateHolder;
@@ -30,8 +37,15 @@ class LightOnState  : public AbstractLightState{
 
 public:
 
-    LightOnState(Machine *context, const int _id) : AbstractLightState(context, _id) {}
+    LightOnState(Machine *context) : AbstractLightState(context) {
+        setId();
+    }
 
+    void setId() override {
+
+        _id = states ::ON;
+
+    }
     virtual void handle(){
 
 
@@ -72,8 +86,15 @@ public:
 class LightOffState : public AbstractLightState{
 public:
 
-    LightOffState(Machine *context, const int _id) : AbstractLightState(context, _id) {}
+    LightOffState(Machine *context) : AbstractLightState(context) {
+        setId();
+    }
 
+    void setId() override {
+
+        _id = states ::OFF;
+
+    }
     virtual void handle(){
 
         if(*_lightSwitchOffPtr){
@@ -128,13 +149,6 @@ int main() {
 
     std::cout << "Hello, this is an example for the superFantasticMachine library!" << std::endl;
 
-    enum states{
-
-        OFF,
-        ON
-
-    };
-
     //Create a Machine Object
 
     Machine context;
@@ -145,8 +159,8 @@ int main() {
     bool switchOff = true;
 
     //Create a bunch of nodes
-    LightOnState  on (contextPtr,states::ON);
-    LightOffState off(contextPtr,states::OFF);
+    LightOnState  on (contextPtr);
+    LightOffState off(contextPtr);
 
     //Initialize to off
     context.setStatePtr(&off);
@@ -158,7 +172,7 @@ int main() {
     //Set Holders
     on._NextStateHolder  = &off;
     off._NextStateHolder = &on;
-    std::cout << context.getActualNodeId() << std::endl;
+
     char in;
     bool done = false;
     do {
