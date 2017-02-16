@@ -114,7 +114,7 @@ public:
         if(*_lightSwitchOffPtr && _lightSwitchOnPtr){
 
             //You can handle strange behaviors here
-            std::cout << "WARNING: both signals ON. This will couse an infinite switching between states in this case."<<std::endl;
+            std::cout << "WARNING: both signals ON. This will cause an infinite switching between states."<<std::endl;
 
         }
 
@@ -201,6 +201,9 @@ int main() {
             case 'q':
                 done = true;
                 break;
+            case 'c':
+                break;
+
             default :
 
                 std::cout << "Wrong command"<< std::endl;
