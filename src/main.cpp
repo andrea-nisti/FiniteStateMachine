@@ -63,7 +63,7 @@ public:
 
         }
 
-        if(*_lightSwitchOffPtr && _lightSwitchOnPtr){
+        if(*_lightSwitchOffPtr && *_lightSwitchOnPtr){
 
             //You can handle strange behaviors here
             std::cout << "WARNING: both signals ON. This will couse an infinite switching between states in this case."<<std::endl;
